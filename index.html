@@ -1,0 +1,288 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ВОЯЖ</title>
+<style>
+:root{--bg:#0a0f0d;--g:#2b3a38;--m:#4a5e55;--p:#b9c6bc;--a:#d9822b;--r:#8a1f1f;--paper:#d5dcd4;--ink:#25342f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--p);font:16px/1.5 Georgia,"Times New Roman",serif}
+button{font:inherit;color:var(--p);background:var(--g);border:1px solid var(--m);padding:8px 12px;cursor:pointer;border-radius:2px}button:hover{border-color:var(--a)}button.on{border-color:var(--a);background:#3a3120}
+input,select{font:inherit;background:#050807;color:var(--p);border:1px solid var(--m);padding:9px;width:100%}
+.eyebrow{font:11px Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.75}
+#site{background:var(--paper);color:var(--ink);min-height:100vh}#site button{background:var(--ink);color:var(--paper);border-color:var(--ink)}#site input{background:#fff;color:var(--ink);border-color:#9aa89f}
+.mast{display:flex;justify-content:space-between;align-items:center;padding:16px 6vw;border-bottom:1px solid #9aa89f}.brand{font-size:22px;letter-spacing:.04em}.mast nav a{margin-left:22px;color:var(--ink);text-decoration:none;font:13px Arial,sans-serif}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;padding:6vh 6vw;align-items:center}.hero h1{font-size:clamp(32px,5vw,56px);line-height:1.05;margin:10px 0}.hero form{display:flex;gap:8px;max-width:480px;margin-top:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;padding:0 6vw 5vh}.cards div{border:1px solid #9aa89f;padding:16px;background:#e3e9e2}
+.vac{padding:5vh 6vw;border-top:1px solid #9aa89f;background:#c9d2ca}.vac h2{margin:6px 0}.cta{padding:12px 20px!important;font-size:17px}
+#site footer{padding:18px 6vw;font:12px Arial,sans-serif;opacity:.75;border-top:1px solid #9aa89f}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.mast nav{display:none}}
+#game{display:none}#top{position:sticky;top:0;z-index:5;background:#050807;border-bottom:1px solid var(--m);padding:8px 12px}
+#obj{color:var(--a);font-size:15px}#bar{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}#bar button{padding:4px 9px;font:13px Arial,sans-serif}
+#m{max-width:980px;margin:0 auto;padding:10px;transition:opacity .15s}.scene{transition:filter .6s}.scene.dark{filter:brightness(.18)}.scene.dark.lit{filter:brightness(.6)}
+#say{min-height:56px;border:1px solid var(--g);padding:9px 12px;margin:8px 0;background:#0d1512}
+.nav{display:flex;justify-content:space-between;align-items:center;margin:6px 0}.sw{position:relative}.ar{position:absolute;top:50%;transform:translateY(-50%);z-index:3;padding:22px 10px;background:#050807cc;font-size:20px}.ar.l{left:0}.ar.r{right:0}.scene svg{width:100%;height:auto;display:block;border:1px solid var(--g)}
+.ob{cursor:pointer}.ob:hover{filter:drop-shadow(0 0 7px #d9822b)}.lb{fill:#b9c6bc;font:13px Georgia,serif;pointer-events:none;paint-order:stroke;stroke:#0a0f0d;stroke-width:3px}
+.inv{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;min-height:44px}.inv button{padding:6px 10px}
+#ov{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;z-index:20;padding:10px}#ov.show{display:flex}
+#box{background:var(--bg);border:1px solid var(--m);max-width:580px;width:100%;max-height:92vh;overflow:auto;padding:16px}#box h3{margin:0 0 8px;color:var(--a);font-weight:normal;font-size:22px}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.hint{border-left:3px solid var(--a);padding:4px 10px;margin:6px 0;background:#1a1a10}.tiny{font-size:13px;opacity:.85}
+#sc{position:fixed;inset:0;z-index:50;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden}#sc.show{display:flex}
+#sc svg{width:min(90vw,90vh);animation:zm .9s ease-in both,jt .06s infinite}#sc.soft svg{animation:fi 2.4s ease both}#sc:after{content:"";position:absolute;inset:0;background:radial-gradient(transparent 30%,#8a1f1f88 100%),repeating-linear-gradient(0deg,#0006 0 2px,transparent 2px 4px);animation:ns .12s steps(3) infinite;pointer-events:none}
+@keyframes zm{from{transform:scale(.25)}to{transform:scale(1.35)}}@keyframes jt{50%{translate:7px -5px}}@keyframes fi{from{opacity:0}to{opacity:.85}}@keyframes ns{50%{opacity:.7}}
+#fl{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:40}
+#bs{position:fixed;inset:0;background:#000;z-index:45;display:none;flex-direction:column;align-items:center;justify-content:center;padding:8vw;text-align:center;color:#b9c6bc;font-size:20px}#bs p{opacity:0;animation:fi2 2s forwards;margin:10px 0;max-width:640px}@keyframes fi2{to{opacity:1}}
+#sub{position:fixed;left:0;right:0;bottom:0;text-align:center;background:#000a;color:#fff;padding:4px;z-index:60;display:none;font:13px Arial,sans-serif}
+.amber{--a:#f2b65c}.amber #m{background:#1b130a}.cake{font-size:24px;letter-spacing:2px;text-align:center;word-break:break-all}
+#site{--paper:#0c1830;--ink:#dce4f4}.mast,#site footer{border-color:#2f3f6e}.cards div{background:#12214a;border-color:#2f3f6e}#site .eyebrow{color:#e8c46a}
+.mt{display:inline-table;border-left:3px solid var(--p);border-right:3px solid var(--p);border-radius:6px;margin:6px 10px}.mt td{padding:4px 14px;text-align:center;font-size:20px}#obj{background:#1a1408;border:1px solid var(--a);padding:8px 10px;font-size:17px}#say:before{content:'Последнее действие: ';opacity:.55;font-size:12px;display:block}
+</style><link rel="stylesheet" href="upgrade.css"><link rel="stylesheet" href="finale.css"></head><body>
+<div id="site"><header class="mast"><div class="brand">◈ Вояж</div><div class="eyebrow">ночные подработки</div></header>
+<section class="hero"><div><div class="eyebrow">Для Полины · пять ночей</div><h1>Есть работёнка</h1><p>Ночной оператор в пункте выдачи «Вояж». Смена с полуночи до шести утра. Опыт не нужен, нужна внимательность. Платим вовремя.</p><p>Одно условие: выдавай посылки только тем, кто действительно пришёл за ними сам.</p><button class="cta" id="cta" onclick="preStart()">Принять</button></div>
+<svg viewBox="0 0 300 220" aria-hidden="true"><rect x="40" y="70" width="220" height="120" fill="#1b2d5e" stroke="#dce4f4" stroke-width="3"/><path d="M40 70l40-40h140l40 40M150 70v120" stroke="#dce4f4" stroke-width="3" fill="none"/><rect x="170" y="110" width="70" height="50" fill="#0c1830" stroke="#dce4f4" stroke-width="2"/><path d="M178 125h54M178 135h40M178 145h50" stroke="#dce4f4"/><circle cx="240" cy="40" r="16" fill="#e8c46a"/></svg></section>
+<section class="cards"><div><b>Круглосуточно</b><br>Окно выдачи не закрывается даже ночью.</div><div><b>Пять суток хранения</b><br>Не забрали, и посылка уезжает обратно.</div><div><b>Проверяем всё</b><br>Паспорт, код из SMS, штрихкод. И немного больше.</div></section>
+<footer>© Вояж</footer></div>
+<div id="game"><div id="top"><div id="obj"></div><div id="bar"></div></div><main id="m"></main></div>
+<div id="ov"><div id="box"></div></div><div id="sc"></div><div id="sub"></div><div id="fl"></div><div id="bs"></div>
+<script>
+const $=q=>document.querySelector(q),KEY='voyazh_v4',LET='0J/QvtC70LjQvdCwLAoK0LXRgdC70Lgg0YLRiyDRjdGC0L4g0YfQuNGC0LDQtdGI0YwsINC30L3QsNGH0LjRgiwg0YLRiyDQv9C10YDQtdC20LjQu9CwINC/0Y/RgtGMINC90L7Rh9C10Lkg0L3QsCDRgdCw0LzQvtC8INGB0YLRgNCw0L3QvdC+0Lwg0L/Rg9C90LrRgtC1INCy0YvQtNCw0YfQuCDQsiDQs9C+0YDQvtC00LU6INC90LUg0LLRi9C00LDQu9CwINC/0L7RgdGL0LvQutGDINC90Lgg0L7QtNC90L7QvNGDINC90LXRh9C10LvQvtCy0LXQutGDLCDQtNC+0YHRgtCw0LvQsCDQutC70Y7RhyDQuNC3INC70YzQtNCwLCDRgNCw0LfQvtCx0YDQsNC70LDRgdGMINCyINC/0YDQvtCy0L7QtNCw0YUg0Lgg0L3QtSDQv9C+0LTQtNCw0LvQsNGB0Ywg0L3QsCDQsdC70LXRgdGC0Y/RidC40YUuCgrQltC10LvQsNGOLCDRh9GC0L7QsdGLINCyINC20LjQt9C90Lgg0YMg0YLQtdCx0Y8g0LHRi9C70L4g0LLRgdC1INGF0L7RgNC+0YjQviwg0L7RgtC70LjRh9C90L7QtSDQt9C00L7RgNC+0LLRjNC1LCDQtNC10L3QtdCzINC4INC70Y7QsdCy0LgsINC60L7RgNC+0YfQtSDRh9GC0L7QsdGLINCy0YHQtSDQsdGL0LvQviDQt9Cw0LXQsdC40YHRjC4KCtChINC00L3RkdC8INGA0L7QttC00LXQvdC40Y8sINCf0L7Qu9C40L3QsC4g0J/QvtGB0YvQu9C60LAg0LTQvtGB0YLQsNCy0LvQtdC90LAuINCg0LDRgdC/0LjRgdGL0LLQsNGC0YzRgdGPINC90LUg0L3Rg9C20L3Qvi4KCldpbGxpYW1z';
+const fresh=()=>({n:0,loc:0,st:0,inv:[],f:{},h:0,hu:{},ach:{},mode:'full',easy:1,ci:0,sel:null,tr:{},mute:0,lost:0,clock:0});
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}S=S||fresh();S.clock=S.clock||0;let T0=Date.now(),AC,MU,gram=0,hold=0;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const LOCS=['Окно выдачи','Подсобка','Комната отдыха'];
+function mat(r){return '<table class="mt">'+r.map(x=>'<tr>'+x.map(v=>'<td>'+v+'</td>').join('')+'</tr>').join('')+'</table>'}
+const IT={knife:['🔪','Канцелярский нож'],bat:['🔋','Батарейки'],lamp:['🔦','УФ-лампа (без батареек)'],lampok:['🟣','УФ-лампа'],cup:['☕','Кружка'],cube:['🧊','Ледяной кубик с ключом внутри'],lkey:['🗝','Ключ от шкафчика'],thermo:['🌡','Термометр'],mirror:['🪞','Зеркальце'],torch:['🔆','Фонарик (динамо)'],fuse:['🔌','Предохранитель'],ckey:['🔑','Ключ от шкафа камер'],k1:['①','Деталь ключа I'],k2:['②','Деталь ключа II'],k3:['③','Деталь ключа III'],k4:['④','Деталь ключа IV'],k12:['①②','Детали I+II'],k34:['③④','Детали III+IV'],key:['🗝','Ключ от ячейки №0'],wish:['✨','Карточка-пожелание']};
+const RULES=['R1 (Н1): ФИО, дата рождения и возраст в паспорте сходятся друг с другом и с посылкой.','R2 (Н1): код из SMS совпадает с кодом терминала.','R3 (Н1): контрольная цифра штрихкода верна.','R4 (Н2): под УФ-лампой на посылке печать «Вояж», а на человеке нет блёсток.','R5 (Н2): посылка выдаётся один раз.','R6 (Н2): холодный клиент (ниже 30 °C) не человек. Горячий это просто горячий.','R7 (Н4): срок хранения 5 суток. Больше значит не человек.','R8 (Н1): у человека обычные зубы и круглые зрачки. Острые, странные зубы или необычные зрачки: не человек.'];
+/* клиенты: u=Невостребованный; fn=нужно найти ячейку */
+const CL=[[],
+[{n:'Марина Костенко',p:'Костенко М. · 12.05.1998 · 27 лет. На посылке то же.',s:'Код 4821. Терминал: 4821.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж», блёсток нет.',st:'4 сут.',g:1},
+{n:'Артём Ширяев',u:1,p:'Ширяев А. · 03.03.1999 · 26 лет.',s:'Код 1177. Терминал: 1177.',b:'4601234567894',bc:3,t:36.6,uv:'Печать «Вояж».',st:'3 сут.',r:'R3: на наклейке 4, а по расчёту должно быть 3.'},
+{n:'Эдвард Калин',u:1,p:'Калин Э. · год рождения 1907 · «возраст: 17».',s:'Код 0090. Терминал: 0090.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'3 сут.',r:'R1: 1907 год и возраст 17 не сходятся.'},
+{n:'Семён Лобанов',p:'Лобанов С. · 21.09.1995 · 30 лет.',s:'Клиент назвал код 5503, но на его телефоне 5530. Терминал: 5530.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'2 сут.',g:1}],
+[{n:'Лев Аркадьевич',p:'Аркадьевич Л. · 07.08.1971 · 54 года.',s:'Код 2211. Терминал: 2211.',b:'4607123456781',bc:1,t:36.7,uv:'Печать «Вояж». Блёсток нет.',st:'2 сут.',par:'Овечка (мягкая игрушка)',g:1,lev:1},
+{n:'Яков Волков',p:'Волков Я. · 14.01.1990 · 35 лет.',s:'Код 3040. Терминал: 3040.',b:'4607123456781',bc:1,t:42,uv:'Печать «Вояж». Блёсток нет.',st:'1 сут.',par:'Футболки (5 шт.)',note:'Без футболки в ноябре. 42 °C.',g:1},
+{n:'Эдвард Калин (снова)',u:1,p:'Калин Э. · данные те же.',s:'Код 0090. Терминал: 0090.',b:'4607123456781',bc:1,t:9,uv:'Блёстки на лице! Печати на посылке нет.',st:'4 сут.',r:'R4/R5/R6: холодный, блестит, печати нет.',gl:1},
+{n:'Тарасик Рыбко',p:'Рыбко Т. · 02.02.2001 · 24 года.',s:'Код 6006. Терминал: 6006.',b:'4607123456781',bc:1,t:36.5,uv:'Печать «Вояж».',st:'3 сут.',fn:'Z',g:1}],
+[{n:'Женщина в плаще',u:1,p:'Верещак О. · 30.06.1993 · 32 года.',s:'Код 7012. Терминал: 7012.',b:'4607123456781',bc:1,t:35,uv:'Блёстки! Терминал: «выдана 2 минуты назад».',st:'3 сут.',r:'R5: посылка уже выдана.',gl:1},
+{n:'Ольга Верещак',p:'Верещак О. · 30.06.1993 · 32 года.',s:'Код 7012. Терминал: 7012.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'3 сут.',fn:'m3a1',g:1},
+{n:'Егор Синяк',p:'Синяк Е. · 11.11.1997 · 28 лет. Нервничает, но всё верно.',s:'Код 8800. Терминал: 8800.',b:'4607123456781',bc:1,t:37.1,uv:'Печать «Вояж».',st:'2 сут.',fn:'m3a2',g:1}],
+[{n:'Дарья Васнецова',p:'Васнецова Д. · 09.04.2000 · 25 лет.',s:'Код 1234. Терминал: 1234.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'3 сут.',g:1},
+{n:'Сергей Козак',u:1,p:'Козак С. · 01.01.1988 · 37 лет.',s:'Код 4444. Терминал: 4444.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'7 СУТОК',r:'R7: хранится 7 суток.'},
+{n:'Анна Лесная',p:'Лесная А. · 18.03.1996 · 29 лет.',s:'Код 9090. Терминал: 9090.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'4 сут. 23 ч.',g:1},
+{n:'Мужчина без имени',u:1,p:'В паспорте «Иванов», на посылке «Ианов»: отличается одна буква.',s:'Код 0001. Терминал: 0001.',b:'4607123456781',bc:1,t:36.6,uv:'Печать «Вояж».',st:'2 сут.',r:'R1: ФИО отличается от посылки одной буквой.'}],[]];
+const ACH={sheep:['Лев влюбился в овечку','Хищник и жертва. Очень романтично. Нет, мы не будем это обсуждать.'],glit:['Блестит','Они блестят. Не спрашивай.'],ice:['Лёд тронулся','Ключ из льда.'],mat:['Коробка из-под коробки','Предохранитель в матрёшке.'],m1:['Контрольная сумма','M1 с первой попытки.'],m2:['Обратимо','M2 без подсказок.'],m3a:['Один росчерк','M3a с первой попытки.'],m3b:['Перестановка кадров','M3b без калькулятора.'],m4a:['Стационарно','M4a без подсказок.'],m4b:['Спектр','M4b без подсказок.'],f:['Q.E.D.','Замок №0 без подсказок.'],nohint:['Без подсказок','Прошла игру без «Справки».'],nine:['Девять жизней','Без прерванных смен.'],dawn:['Рассвет','Пройден финал.'],gram:['Заводная пластинка','Включила family-tune на граммофоне.'],enough:['Хватит','Нажала «Хватит». Это нормально.'],wish:['Загадай желание','Открыла шкатулку с карточкой.']};
+function ach(id){if(S.ach[id])return;S.ach[id]=1;save();toast('🏆 '+ACH[id][0]+': '+ACH[id][1])}
+function toast(t){const e=document.createElement('div');e.textContent=t;e.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#3a3120;border:2px solid #d9822b;padding:8px 12px;z-index:70;max-width:90vw';document.body.append(e);setTimeout(()=>e.remove(),4200)}
+/* ---------- звук и эффекты ---------- */
+function ctx(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}return AC}
+function sub(t){const e=$('#sub');e.textContent='[звук: '+t+']';e.style.display='block';setTimeout(()=>e.style.display='none',2200)}
+function snd(kind,t){if(S.mute||S.mode==='off')return;sub(t);const c=ctx();if(!c)return;const o=c.createOscillator(),g=c.createGain(),v=S.mode==='full'?.25:.08;o.type=kind==='scream'?'sawtooth':'sine';o.frequency.value=kind==='scream'?90:kind==='click'?500:60;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+(kind==='scream'?1.2:.5));o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+1.3);if(kind==='scream'){o.frequency.exponentialRampToValueAtTime(700,c.currentTime+.5)}}
+let G=0;const busy=()=>!G||$('#ov').classList.contains('show')||S.f.fin||$('#bs').style.display==='flex';
+function fx(type,subt){if(S.mode==='off'||busy()||Date.now()-T0<60000)return;if(type==='flick')flicker(subt);if(type==='scare')scare()}
+function flicker(subt,force){if(S.mode==='off'){if(force)toast('Эффекты отключены. Включи режим «Мягкий» или «Полный».');return}const e=$('#fl');if(!e)return;snd('low',subt||'гудение лампы');
+ if(S.mode==='full'){[[0,.92],[130,0],[260,.85],[360,0],[560,.9],[700,0]].forEach(([d,o])=>setTimeout(()=>{e.style.transition='none';e.style.opacity=o},d))}
+ else{e.style.transition='opacity .7s';e.style.opacity=.6;setTimeout(()=>e.style.opacity=0,900)}}
+const FACE='<svg viewBox="0 0 100 100"><defs><radialGradient id="fg" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#cfd6cc"/><stop offset="1" stop-color="#5b6a64"/></radialGradient></defs><rect width="100" height="100" fill="#000"/><path d="M26 20Q50 2 74 20Q84 50 70 80Q50 98 30 80Q16 50 26 20z" fill="url(#fg)"/><ellipse cx="38" cy="42" rx="9" ry="13" fill="#000"/><ellipse cx="62" cy="42" rx="9" ry="13" fill="#000"/><circle cx="38" cy="44" r="2" fill="#fff"/><circle cx="62" cy="44" r="2" fill="#fff"/><path d="M30 64Q50 100 70 64Q50 74 30 64z" fill="#150404"/><path d="M33 66l3 7 3-6 3 8 3-7 3 8 3-7 3 8 3-7 3 6 3-7" stroke="#cfd6cc" stroke-width="1.6" fill="none"/><path d="M34 30l6 8M66 28l-7 9M50 16v10" stroke="#222" stroke-width=".8"/></svg>';
+function scare(){if(S.mode==='off'){return}const s=$('#sc');s.className='show'+(S.mode==='soft'?' soft':'');s.innerHTML=FACE;snd('scream','крик');if(S.mode==='full'&&navigator.vibrate)navigator.vibrate(200);setTimeout(()=>s.className='',S.mode==='soft'?2400:1100)}
+function stop(){S.mode='off';$('#sc').className='';$('#fl').style.opacity=0;save();ach('enough');openMenu('Эффекты отключены на смену. Игра на паузе.')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')stop()});
+/* граммофон */
+function gramophone(){gram=!gram;if(gram){ach('gram');if(!MU){MU=new Audio('./audio/family-tune.mp3');MU.loop=true;MU.onerror=()=>{MU=null;synth()}}if(MU){MU.play().catch(()=>{synth()})}}else{if(MU)MU.pause();clearInterval(window.SY)}render()}
+function synth(){const c=ctx();if(!c)return;const N=[0,3,7,12,7,3,0,-2];let i=0;clearInterval(window.SY);window.SY=setInterval(()=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=330*Math.pow(2,N[i++%8]/12);g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.7);o.connect(g).connect(c.destination);o.start();o.stop(c.currentTime+.8)},600);sub('шкатулочная мелодия (файла нет)')}
+/* ---------- подсказки и задачи ---------- */
+const P={
+box:{t:'Шкатулка: 4 барабана',d:'На шкатулке записка: «Время остановилось, когда я перестал ждать». Введи код.',a:'0317',h:['Часы остановились не просто так.','Четыре цифры, и они на стене.','Код 0317 (часы показывают 03:17).'],ok(){S.f.box=1;give('lamp');give('k1');say('Внутри УФ-лампа без батареек и деталь ключа I.')}},
+m1:{t:'M1: контрольная цифра штрихкода',d:'Правило с плаката: сложи цифры на нечётных местах (1-е, 3-е, 5-е...). Сложи цифры на чётных местах и умножь на 3. Сложи оба числа. Контрольная цифра: сколько не хватает до круглых десятков. Для штрихкода 460123456789 какая она?',a:'3',h:['Цифра на конце может быть не от людей.','Сложи нечётные, чётные утрой.','Нужна цифра 3.'],ok(){S.f.m1=1;ach2('m1');say('Верно. Терминал запомнил правило.')},id:'m1'},
+m2:{t:'Журнал оператора: пароль (шифр Хилла)',d:'Пароль зашифрован: ZYPJ. Ключ-матрица K (такая же на плакате):'+mat([[3,3],[2,5]])+'Буквы это числа: A=0 … Z=25. Считай по модулю 26.',a:'door',h:['Ключ-матрица на плакате у выхода.','Нужна обратная матрица по модулю 26.','det=9, обратное 3, K⁻¹=[[15,17],[20,9]]. Пароль DOOR.'],ok(){S.f.log=1;ach2('m2');say('Журнал открыт: «Они блестят. Не спрашивай». Посылка Тарасика в служебной ячейке Z.')},id:'m2'},
+m3a:{t:'Щиток: кабель по всем проводам',d:'Провода: AB AC BC BD CD CE DE DF EF. Вход B, выход E. Пройди все по одному разу. Введи путь буквами, например BACB...',h:['Посчитай, сколько проводов сходится в каждом узле.','Нечётных узлов два (B и E): начни с B, закончи в E.','Один из ответов: B-A-C-B-D-F-E-D-C-E. Подойдёт любой путь из 10 букв: от B до E, каждый из 9 проводов один раз.'],err:'Нужен путь из 10 букв: начать с B, закончить в E и пройти все 9 проводов по одному разу. Например путь, который кончается в F, не подходит: в нём остался непройденный провод.',id:'m3a',chk(v){const p=v.toUpperCase().replace(/[^A-F]/g,'');if(p[0]!=='B'||p.at(-1)!=='E'||p.length!==10)return 0;const E=['AB','AC','BC','BD','CD','CE','DE','DF','EF'],u=new Set();for(let i=0;i<9;i++){const e=[p[i],p[i+1]].sort().join('');if(!E.includes(e)||u.has(e))return 0;u.add(e)}return 1},ok(){S.f.m3a=1;S.f.dark=0;give('k3');say('Щиток заработал, свет вернулся. Под крышкой деталь ключа III.');ach2('m3a')}},
+m3b:{t:'M3b: сбой ротации',d:'Ячейки переставлены 2026 раз. Таблица: 1→3, 2→1, 3→2, 4→6, 5→4, 6→7, 7→5. Ольга лежала в ячейке 2, Егор в ячейке 5. Введи две ячейки: сначала Ольги, потом Егора.',a:'16',h:['Таблица раскладывается на циклы.','Циклы (1 3 2) и (4 6 7 5), остаток от деления 2026.','Ольга: 1. Егор: 6. Ответ 1 6.'],ok(){S.f.m3b=1;S.f.cell1='1';S.f.cell2='6';ach2('m3b');say('Ячейки найдены: Ольга в 1, Егор в 6.')},id:'m3b'},
+m4a:{t:'Тень на камерах',d:'Раз в минуту тень переходит: с K1 остаётся 1/2, на K2 1/2; с K2 на K1 1/4, остаётся 1/2, на K3 1/4; с K3 на K2 1/2, остаётся 1/2. На какой камере тень чаще? Закрой её шторку (1, 2 или 3).',a:'2',h:['Тень идёт случайно, но не бесконечно.','Найди распределение, которое не меняется после шага.','π=(1/4, 1/2, 1/4): камера 2.'],ok(){S.f.m4a=1;ach2('m4a');say('Шторка K2 закрыта. Тень у окна стала реже.')},id:'m4a'},
+m4b:{t:'Железная дверь: матрица',d:'Матрица на двери:'+mat([[2,0,0],[0,3,4],[0,4,9]])+'Табличка: «Собственные числа от меньшего к большему, через дефис».',a:'1-2-11',h:['Дверь просит числа, а не слова.','Разложи на блоки. Для 2×2: λ² − tr·λ + det = 0.','1-2-11'],ok(){S.f.m4b=1;give('k4');ach2('m4b');say('Дверь открылась. Склад: деталь ключа IV.')},id:'m4b',norm:v=>v.replace(/[\s,.;]+/g,'-').replace(/^-|-$/g,'')},
+f:{t:'Замок ячейки №0',d:'На наклейке «Возраст получателя: ??». Сколько элементов в кольце ℤ/25ℤ имеют обратный по умножению?',a:'20',h:['Посмотри, чему равно «??» на наклейке.','Обратимы вычеты с НОД = 1 с модулем.','φ(25)=20.'],ok(){S.f.fin=1;ach2('f');finale()},id:'f'},
+safe:{t:'Сейф управляющей',d:'Четыре цифры. Зеркальные стикеры на окне комнаты отдыха.',a:'7351',h:['Записки не пьяны, они зеркальны.','Возьми зеркальце и приложи к окну.','Код 7351.'],ok(){S.f.safe=1;give('ckey');say('В сейфе ключ от шкафа камер.')}},
+photo:{t:'Фотография на стене',d:'На обороте: «Срок хранения посылки в сутках. Столько же ночей я ждал».',a:'5',h:['Правило R7.','Срок хранения 5 суток.','Ответ 5.'],ok(){S.f.photo=1;give('wish');ach('wish');say('За фотографией шкатулка с карточкой-пожеланием.')}}};
+function ach2(id){if(id==='m3a'){if(!S.tr.m3a&&!S.hu.m3a)ach(id)}else if(id==='m1'){if(S.tr[id]===1)ach(id)}else if(!S.hu[id])ach(id)}
+function give(i){if(!S.inv.includes(i))S.inv.push(i)}function take(i){S.inv=S.inv.filter(x=>x!==i)}
+function say(t){S.msg=t;$('#say')&&($('#say').innerHTML=t)}
+function openP(id){if(id==='m3a')return openWires();const p=P[id],lv=S.hu[id]||0;modal(`<h3>${p.t}</h3><p>${p.d}</p><input id="ans" autocomplete="off" placeholder="Ответ"><div class="row"><button onclick="ansP('${id}')">Проверить</button><button onclick="hintP('${id}')">Справка «Вояж» (${lv}/3)</button><button onclick="closeM()">Закрыть</button></div><div id="hs">${p.h.slice(0,lv).map(x=>'<div class=hint>'+x+'</div>').join('')}</div><div id="pm"></div>`);setTimeout(()=>$('#ans')&&$('#ans').focus(),50)}
+const WC=[['#d33','красный'],['#36c','синий'],['#3a3','зелёный'],['#ec3','жёлтый'],['#a3d','фиолетовый']],WO=[2,4,0,3,1];
+function openWires(msg){const W=S.f.wire=S.f.wire||{c:{},sel:null};const ys=i=>40+i*46;let s='<svg viewBox="0 0 320 260" style="width:100%;max-width:420px;background:#0a1210;border:1px solid #4a5e55">';
+ WO.forEach((ci,j)=>{if(W.c[ci])s+=`<path d="M50 ${ys(ci)}C150 ${ys(ci)} 170 ${ys(j)} 270 ${ys(j)}" stroke="${WC[ci][0]}" stroke-width="7" fill="none"/>`});
+ WC.forEach((c,i)=>{s+=`<g onclick="wl(${i})" style="cursor:pointer"><circle cx="40" cy="${ys(i)}" r="15" fill="${c[0]}" stroke="${W.sel===i?'#fff':'#222'}" stroke-width="${W.sel===i?4:2}"/></g>`});
+ WO.forEach((ci,j)=>{s+=`<g onclick="wr(${j})" style="cursor:pointer"><circle cx="280" cy="${ys(j)}" r="15" fill="${WC[ci][0]}" stroke="#222" stroke-width="2"/></g>`});s+='</svg>';const lv=S.hu.m3a||0;
+ modal(`<h3>Щиток</h3><p>Соедини провода одного цвета: нажми на цветной контакт слева, потом на контакт того же цвета справа.</p>${s}<p style="color:#d9822b">${msg||''}</p><div class="row"><button onclick="hintW()">Справка «Вояж» (${lv}/3)</button><button onclick="closeM()">Закрыть</button></div>${['Ищи одинаковые цвета слева и справа.','Красный к красному, синий к синему, и так далее.','Справа порядок перемешан: смотри на цвет, а не на высоту.'].slice(0,lv).map(x=>'<div class="hint">'+x+'</div>').join('')}`)}
+function wl(i){const W=S.f.wire;if(W.c[i])return;W.sel=i;openWires()}
+function wr(j){const W=S.f.wire,ci=WO[j];if(W.sel==null)return openWires('Сначала нажми на контакт слева.');if(W.sel===ci){W.c[ci]=1;W.sel=null;if(Object.keys(W.c).length===5){closeM();P.m3a.ok();save();render();return}save();openWires('Есть контакт!')}else{W.sel=null;S.tr.m3a=(S.tr.m3a||0)+1;openWires('Не тот цвет. Провод сорвался.')}}
+function hintW(){S.hu.m3a=Math.min(3,(S.hu.m3a||0)+1);S.h++;save();openWires()}
+function hintP(id){const p=P[id];S.hu[id]=Math.min(3,(S.hu[id]||0)+1);S.h++;save();openP(id)}
+function ansP(id){const p=P[id];let v=$('#ans').value.trim().toLowerCase().replace(/\s+/g,'');S.tr[id]=(S.tr[id]||0)+1;let ok;if(p.chk)ok=p.chk(v);else{if(p.norm)v=p.norm(v);ok=v.replace(/[\s-]/g,'')===p.a.toLowerCase().replace(/[\s-]/g,'')}if(ok){closeM();p.ok();save();render()}else{$('#pm').innerHTML='<p style="color:#d9822b">'+(p.err||'Не подходит. Попробуй ещё или открой «Справку».')+'</p>'}}
+function modal(h){$('#box').innerHTML=h;$('#ov').classList.add('show')}function closeM(){$('#ov').classList.remove('show')}
+/* ---------- меню / правила ---------- */
+const RT=[1,1,1,2,2,2,4,1];
+const NI=[0,{t:'Ночь 1. «Приёмка»',w:'Спрашивай у каждого клиента паспорт (ФИО, дата рождения, возраст), SMS с кодом и штрихкод посылки. Всё должно сходиться. Если нет, это Невостребованный: откажи. Нормальному человеку выдай.',r:[0,1,2,7]},{t:'Ночь 2. «Лёд и жар»',w:'Теперь есть УФ-лампа и термометр. Свети лампой на посылку и измеряй температуру клиента. Старые правила тоже действуют.',r:[3,4,5]},{t:'Ночь 3. «Тёмная смена»',w:'Посреди ночи гаснет свет. Работай при фонарике. Новых правил нет, старые действуют.',r:[]},{t:'Ночь 4. «Камеры»',w:'Смотри на срок хранения посылки. На камерах появится тень.',r:[6]},{t:'Ночь 5. «Рассвет»',w:'Клиентов больше нет. Телефон на прилавке звонит.',r:[]}];
+function rulesAll(n){return '<ul class="tiny">'+RULES.filter((_,i)=>RT[i]<=n).map(r=>'<li>'+r+'</li>').join('')+'</ul>'}
+function nightIntro(n,review){const x=NI[n];if(!x)return;modal(`<div class="eyebrow">СМЕНА ${n} ИЗ 5</div><h3>${x.t}</h3><p>${x.w}</p>${x.r.length?'<div class="eyebrow">Новые правила</div><div class="hint">'+x.r.map(i=>RULES[i]).join('<br>')+'</div>':''}<div class="eyebrow">Все правила смены</div>${rulesAll(n)}<p class="tiny">Выдать нечеловеку или отказать человеку = страйк. Если не знаешь, куда идти, нажми «Застряла?».</p><div class="row"><button onclick="closeM()">${review?'Закрыть':'К работе'}</button></div>`)}
+const ctl=()=>`<label>Режим страха <select onchange="S.mode=this.value;save()"><option value="full"${S.mode==='full'?' selected':''}>Полный (резкие, скримеры)</option><option value="soft"${S.mode==='soft'?' selected':''}>Мягкий (плавные, тише)</option><option value="off"${S.mode==='off'?' selected':''}>Без эффектов</option></select></label><p><label><input type="checkbox" style="width:auto" ${S.easy?'checked':''} onchange="S.easy=this.checked?1:0;save()"> Лёгкий режим: ошибки не обнуляют ночь</label> <label><input type="checkbox" style="width:auto" ${S.mute?'checked':''} onchange="S.mute=this.checked?1:0;save()"> Без звука</label></p>`;
+function howTo(){modal(`<div class="eyebrow">Как это работает</div><h3>Правила смены</h3><ul><li>Нажимай на предметы в комнатах. Чтобы применить вещь, выбери её внизу в инвентаре и нажми на объект. Стрелки по бокам ведут в другие комнаты.</li><li>Если застряла, нажми «Застряла?» — появится один конкретный следующий шаг.</li><li>К окну приходят посетители. Спроси паспорт, SMS и штрихкод. Можно попросить улыбнуться и посмотреть в глаза: у человека обычные зубы и круглые зрачки, у остальных нет.</li><li>Выдать нечеловеку или отказать человеку: страйк. Три страйка и ночь начинается заново.</li><li>Первый посетитель приходит сразу. Потом дела по пункту, а за ними ещё двое.</li><li>Часы двигаются по сюжету. Закончи дела смены и задания архива, обслужи ровно трёх посетителей — сразу наступит 06:00. Ждать таймер не нужно.</li><li>В каждой задаче есть «Справка Вояж» с тремя подсказками. Третья даёт ответ.</li><li>Кнопка «Хватит» или Esc отключает эффекты.</li></ul>${ctl()}<div class="row"><button class="on" onclick="closeM();backstory()">Начать смену</button></div>`)}
+function preStart(){S.n?enterGame():howTo()}
+function openMenu(msg){modal(`<h3>Меню</h3>${msg?'<p>'+msg+'</p>':''}${ctl()}<div class="row"><button onclick="closeM()">Продолжить</button><button onclick="nightIntro(S.n,1)">Правила смены</button><button onclick="if(confirm('Начать заново?')){S=fresh();save();location.reload()}">Начать смену заново</button></div>`)}
+function backstory(){const L=['Ты Полина. Тебе двадцать.','Подработка на ночь: пункт выдачи «Вояж».','Посылки хранятся пять суток. Не забрали, и она уезжает обратно.','Но некоторые приходят за собой сами.','Им нельзя ничего выдавать. Никогда.','На стекле записка от Валентины П.: «Проверяй документы. Не спорь. К утру всё будет иначе».','Смена начинается.'];const b=$('#bs');b.style.display='flex';b.innerHTML=L.map((x,i)=>`<p style="animation-delay:${i*2.4}s">${x}</p>`).join('')+`<div class="row"><button style="opacity:0;animation:fi2 1s ${L.length*2.4}s forwards" id="go" onclick="startGame()">Войти на пункт</button></div>`;b.onclick=e=>{if(e.target.id==='go')return;b.querySelectorAll('p,button').forEach(p=>{p.style.animation='none';p.style.opacity=1})}}
+function startGame(){$('#bs').style.display='none';S.n=1;T0=Date.now();save();enterGame();nightIntro(1)}
+function enterGame(){G=1;$('#site').style.display='none';$('#game').style.display='block';T0=Date.now();render()}
+function trk(e){e.preventDefault();$('#trkres').textContent=($('#trk').value||'VY-0020')+': посылка ждёт получателя. Срок хранения: 5 суток. Получатель: вы.';return false}
+function nightWin(){const n=S.n;modal(`<div class="eyebrow">06:00</div><h3>Ночь ${n} пройдена</h3><p>${['','Первая смена позади. Часы, коробка, лампа, штрихкоды.','Лёд растаял, ключ найден. Пункт помнит, что ты сделала.','Свет вернулся. Кто-то ходил по камерам, но не за тобой.','Тень закрыта шторкой. Осталась последняя ночь.'][n]}</p><p class="tiny">Деталь ключа ${n} из 4 у тебя в инвентаре.</p><div class="row"><button class="on" onclick="closeM();endNight()">Дальше</button></div>`)}
+
+setInterval(()=>{if(busy()||S.mode==='off'||!S.n||Date.now()-T0<60000)return;const lim=[0,1,2,2,3,1][S.n];if((S.f.fc||0)>=lim)return;S.f.fc=(S.f.fc||0)+1;flicker()},25000);
+
+function achList(){modal('<h3>Ачивки</h3>'+Object.entries(ACH).map(([k,v])=>`<p>${S.ach[k]?'🏆':'🔒'} <b>${k==='sheep'&&!S.ach[k]?'???':v[0]}</b><br><span class=tiny>${k==='sheep'&&!S.ach[k]?'Скрытая':v[1]}</span></p>`).join('')+'<button onclick="closeM()">Закрыть</button>')}
+/* ---------- цель сверху ---------- */
+function clientsLeft(){return S.ci<Math.min(3,CL[S.n].length)}
+function tasksDone(){const f=S.f,n=S.n;return n===1?f.box&&f.m1&&f.lampok:n===2?f.lk2&&f.log&&f.sort:n===3?f.m3a&&f.m3b:n===4?f.m4a&&f.m4b:0}
+const tm=()=>String(Math.floor(S.clock/60)).padStart(2,'0')+':'+String(S.clock%60).padStart(2,'0');
+const needC=()=>Math.min(3,(CL[S.n]||[]).length),clientsDone=()=>S.ci>=needC();
+function objective(){const f=S.f,n=S.n,i=S.inv,has=x=>i.includes(x);if(!n)return'Нажми «Откликнуться».';if(f.fin)return'Финал.';
+ const cli='Окно выдачи: нажми на посетителя в окне ('+Math.min(S.ci+1,needC())+' из '+needC()+'). Спроси паспорт, SMS, штрихкод и нажми «Выдать» или «Отказать».';
+
+ const cli1='Окно выдачи: нажми на посетителя в окне (1 из 3). Спроси паспорт, SMS, штрихкод. Можно попросить улыбнуться и посмотреть в глаза. Потом «Выдать» или «Отказать».';
+ const wait='Смена завершена. Рассвет: '+tm()+'.';
+ if(n<5&&S.ci<1)return cli1;
+ if(n===1){if(!f.box)return has('knife')||f.knife?'Выбери в инвентаре «Нож» и нажми на «Коробку» на прилавке (окно выдачи). Код смотри на «Часах».':'Окно выдачи: нажми на «Ящик» под прилавком и возьми нож.';
+  if(!f.lampok)return has('bat')?'В инвентаре нажми «Батарейки», потом «УФ-лампа»: они соединятся.':'Комната отдыха: нажми на «Телевизор», в пульте батарейки.';
+  if(!f.m1)return'Окно выдачи: нажми «Терминал», затем «Проверка штрихкодов». Там кнопка «Справка Вояж».';
+  return clientsDone()?wait:cli}
+ if(n===2){if(!f.lk2){if(!f.cubeTaken)return'Комната отдыха: нажми «Морозилка» и возьми кубик со льдом.';if(!f.cup)return'Комната отдыха: нажми «Кружки» и возьми кружку.';
+   if(f.cupW)return'Комната отдыха: выбери «Кружку» и нажми «Чайник»: вода перельётся в чайник.';if(!f.kettle&&!f.cubeIn)return'Подсобка: выбери «Кружку» и нажми «Раковина»: наберётся вода.';
+   if(f.kettle===1)return'Комната отдыха: нажми «Чайник», он включится. Подожди 8 секунд.';if(f.kettle===3)return'Подожди несколько секунд: чайник закипает.';
+   if(!f.cubeIn)return'В инвентаре нажми «Кубик», затем «Кружка»: кубик окажется в кружке.';return'Выбери «Кружку» и нажми «Чайник»: кипяток растопит лёд, ключ освободится.'}
+  if(!f.lockerOpen)return'Комната отдыха: выбери «Ключ от шкафчика» и нажми «Шкафчик».';
+  if(!f.log)return'Окно выдачи: «Терминал», затем «Журнал оператора». Пароль на стикере: ZYPJ, расшифруй (там «Справка»).';
+  if(!f.sort)return'Подсобка: нажми «Стеллаж» и разложи 6 посылок по температуре.';
+  return clientsDone()?wait:cli}
+ if(n===3){if(f.dark&&!f.torchOk)return has('torch')?'Свет погас! В инвентаре нажми «Фонарик» и держи кнопку 3 секунды.':'Свет погас! Окно выдачи: нажми «Ящик», там фонарик.';
+  if(!f.dark&&!f.darkDone)return 'После первого посетителя свет погаснет. Осмотри ящик у окна.';
+  if(!f.fuse&&!f.fuseIn)return'Подсобка: нажми «Потерянные вещи» три раза (коробка в коробке в коробке).';
+  if(!f.fuseIn)return'В инвентаре выбери «Предохранитель» и нажми «Щиток» в подсобке.';
+  if(!f.m3a)return'Подсобка: нажми «Щиток» и соедини провода одинакового цвета.';
+  if(!f.m3b)return'Окно выдачи: «Терминал», затем «Сбой ротации».';
+  return clientsDone()?wait:cli}
+ if(n===4){if(!f.safe&&!f.mirrorSeen)return'В инвентаре выбери «Зеркальце» и нажми «Окно со стикерами» в комнате отдыха.';
+  if(!f.safe)return'Комната отдыха: нажми «Стол управляющей» и введи код со стикеров (7351).';
+  if(!f.camcab)return'Подсобка: выбери «Ключ от шкафа камер» и нажми «Шкаф камер».';
+  if(!f.m4a)return'Подсобка: «Шкаф камер»: закрой шторку камеры, где тень бывает чаще всего.';
+  if(!f.m4b)return'Подсобка: нажми «Железная дверь» и введи собственные числа матрицы.';
+  return clientsDone()?wait:cli}
+ if(!f.assembled)return f.ph?'В инвентаре соедини детали ключа: I+II, III+IV, затем два результата.':'Окно выдачи: нажми «Телефон». Потом собери ключ из четырёх деталей.';
+ return'Окно выдачи: нажми «Ячейка №0» и введи код 20.'}
+/* ---------- рендер ---------- */
+function top2(){document.body.className=S.f.fin?'amber':'';
+ $('#obj').innerHTML='➜ '+objective()+(S.n?'   |   Ночь '+S.n+'/5   <span id="clk">🕛 '+tm()+'</span>   Страйки: '+'●'.repeat(S.st)+'○'.repeat(3-S.st):'');
+ $('#bar').innerHTML=`<button onclick="openMenu()">Меню</button><button onclick="nightIntro(S.n,1)">📋 Правила</button><button onclick="stop()">Хватит</button><button onclick="S.mute=!S.mute;save();render()">${S.mute?'🔇':'🔊'}</button><button onclick="gramophone()" class="${gram?'on':''}">📻 Граммофон${gram?': family-tune ♪':''}</button><button onclick="achList()">🏆</button>`;
+}
+const FT={'Артём Ширяев':'nr','Эдвард Калин':'nsl','Эдвард Калин (снова)':'ssl','Женщина в плаще':'nhz','Сергей Козак':'sr','Мужчина без имени':'wbg'};
+function faceG(c,sm){const k=FT[c.n]||'nr',te=k[0],pu=k.slice(1);let g='<ellipse cx="50" cy="52" rx="30" ry="38" fill="#c9b99a"/><path d="M20 40Q22 12 50 12Q78 12 80 40Q70 24 50 26Q30 24 20 40z" fill="#2a2420"/>';
+ [38,62].forEach(x=>{g+=`<ellipse cx="${x}" cy="46" rx="8" ry="6" fill="#e8e4d8"/>`;g+=pu==='sl'?`<ellipse cx="${x}" cy="46" rx="1.3" ry="6" fill="#111"/>`:pu==='hz'?`<ellipse cx="${x}" cy="46" rx="6.5" ry="1.8" fill="#111"/>`:pu==='bg'?`<circle cx="${x}" cy="46" r="7" fill="#111"/>`:`<circle cx="${x}" cy="46" r="2.8" fill="#222"/>`});
+ g+='<path d="M47 52l-3 10h6" stroke="#8a7a62" fill="none" stroke-width="1.2"/>';if(!sm)return g+'<path d="M40 72q10 3 20 0" stroke="#5a3a35" stroke-width="2" fill="none"/>';
+ g+='<path d="M34 68Q50 88 66 68Q50 74 34 68z" fill="#3a1010"/>';const a=[0,1,2,3,4,5];
+ return g+(te==='n'?a.map(i=>`<rect x="${37+i*4.8}" y="69" width="4" height="5" fill="#eee" rx="1"/>`).join(''):te==='s'?a.map(i=>`<path d="M${37+i*4.8} 69l2.4 ${i%2?10:7}l2.4-${i%2?10:7}z" fill="#eee"/>`).join(''):[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M${36+i*3.6} 69l1.8 ${3+(i*7)%6}l1.8-${3+(i*7)%6}z" fill="#ddd"/><path d="M${37+i*3.4} 78l1.6-${3+(i*5)%4}l1.6 ${3+(i*5)%4}z" fill="#ddd"/>`).join(''))}
+const Rc=(x,y,w,h,f,s)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}"${s?` stroke="${s}" stroke-width="2"`:''}/>`;
+const OB=(id,l,lx,ly,i)=>`<g class="ob" role="button" aria-label="${l}" onclick="act('${id}')" tabindex="0" onkeydown="if(event.key==='Enter')act('${id}')"><title>${l}</title>${i}<text x="${lx}" y="${ly}" class="lb" text-anchor="middle">${l}</text></g>`;
+function scene(){const f=S.f,n=S.n,L=S.loc,K='#4a5e55';let o=`<defs><radialGradient id="lg" cx=".5" cy=".05" r=".9"><stop offset="0" stop-color="#d9822b" stop-opacity=".32"/><stop offset="1" stop-color="#d9822b" stop-opacity="0"/></radialGradient></defs>${Rc(0,0,960,520,'#1b2724')}${Rc(0,400,960,120,'#111915')}${Rc(0,396,960,6,'#2b3a38')}${Rc(0,0,960,520,'url(#lg)')}<path d="M480 0v34M440 34h80l-14 20h-52z" fill="#2b3a38"/><ellipse cx="480" cy="56" rx="26" ry="5" fill="#d9822b"/>`;
+ if(L===0){const cl=clientsLeft()&&n<5&&!(f.dark&&!f.torchOk)&&(S.ci<1||tasksDone());
+  o+=Rc(0,372,960,150,'#243230',K)+OB('cust',cl?'Посетитель: нажми':'Окно выдачи',480,52,Rc(300,70,360,250,'#0a1210',K)+(n===5?'<g fill="#050807">'+[340,410,480,550,610].map(x=>`<ellipse cx="${x}" cy="220" rx="22" ry="62"/>`).join('')+'</g>':'')+(cl?`<circle cx="480" cy="190" r="120" fill="#d9822b" opacity=".12"/><path d="M395 320q0-92 85-92t85 92z" fill="#3a4a46"/><g transform="translate(415 98) scale(1.3)">${faceG(CL[n][S.ci],0)}</g>`:'<text x="480" y="200" fill="#4a5e55" font-size="18" text-anchor="middle">Окно пусто</text>')+'<path d="M320 90l60-20M520 320l120-80" stroke="#b9c6bc" stroke-opacity=".12" stroke-width="14"/>'+Rc(290,320,380,14,K))
+  +OB('clock','Часы',110,176,'<circle cx="110" cy="116" r="46" fill="#b9c6bc" stroke="#25342f" stroke-width="4"/><path d="M110 116l22 3M110 116l33 7" stroke="#25342f" stroke-width="4" stroke-linecap="round"/><circle cx="110" cy="116" r="3" fill="#25342f"/>')
+  +OB('poster','Плакат',800,300,Rc(730,80,140,210,'#c9d2ca',K)+'<path d="M745 105h110M745 125h90M745 145h100M745 175h60M745 195h100M745 215h70M745 245h90" stroke="#25342f" stroke-width="3"/>')
+  +OB('term','Терминал',755,330,Rc(700,300,110,64,'#050807',K)+'<path d="M712 315h60M712 328h80M712 341h40" stroke="#4a9e55" stroke-width="3"/>'+Rc(745,364,20,10,K))
+  +OB('phone','Телефон',170,350,Rc(140,340,60,24,'#050807','#b9c6bc')+'<circle cx="170" cy="352" r="5" fill="#d9822b"/>')
+  +OB('counter',f.box?'Прилавок':'Коробка',375,330,f.box?Rc(335,345,90,24,'#8a7a55','#25342f'):Rc(335,325,90,44,'#b8a77d','#25342f')+'<path d="M335 347h90M380 325v44" stroke="#e3e9e2" stroke-width="4"/>')
+  +OB('drawer','Ящик',600,445,Rc(520,410,160,56,'#2b3a38','#b9c6bc')+Rc(580,430,40,8,'#b9c6bc'));
+  if(n>=4)o+=OB('cams','Камеры',95,300,Rc(40,215,110,70,'#050807',K)+(f.m4a?'':'<circle cx="90" cy="250" r="12" fill="#2b3a38"/>')+'<path d="M52 228h30M52 270h50" stroke="#4a9e55"/>');
+  if(n===5)o+=OB('cell0','Ячейка №0',890,396,Rc(850,412,80,98,'#243230','#b9c6bc')+'<text x="890" y="470" fill="#d9822b" font-size="30" text-anchor="middle">0</text>')}
+ if(L===1)o+=OB('shelf','Стеллаж',155,112,Rc(40,125,230,270,'#243230',K)+[190,250,320].map(y=>Rc(40,y,230,8,K)).join('')+Rc(55,150,50,40,'#8a7a55')+Rc(120,160,40,30,'#8a97a0')+Rc(180,145,60,45,'#b8a77d')+Rc(60,215,70,35,'#b8a77d')+Rc(160,220,80,30,'#8a7a55')+Rc(70,285,40,35,'#8a97a0'))
+  +OB('sink','Раковина',395,300,Rc(330,330,130,70,'#2b3a38',K)+'<ellipse cx="395" cy="338" rx="55" ry="12" fill="#0a1210"/><path d="M395 318v-30q0-12 14-12" stroke="#b9c6bc" stroke-width="5" fill="none"/>')
+  +OB('panel','Щиток',575,108,Rc(520,120,110,160,'#3a4a46',K)+Rc(535,140,80,60,'#1b2724')+`<circle cx="575" cy="240" r="9" fill="${f.m3a?'#4a9e55':f.fuseIn?'#d9822b':'#8a1f1f'}"/>${WC.map((c,i)=>`<path d="M540 ${150+i*10}h70" stroke="${c[0]}" stroke-width="4"/>`).join('')}`)
+  +OB('lost','Потерянные вещи',395,505,Rc(340,430,110,70,'#8a7a55','#25342f')+Rc(335,424,120,12,'#a08f66'))
+  +OB('camcab','Шкаф камер',735,100,Rc(680,110,110,210,'#2b3a38',K)+[165,215,265].map((y,i)=>`<circle cx="735" cy="${y}" r="14" fill="${f.m4a&&i===1?'#050807':'#4a5e55'}" stroke="#b9c6bc"/>`).join(''))
+  +OB('iron','Железная дверь',875,92,Rc(820,100,110,310,'#3a4a46',K)+'<text x="875" y="250" fill="#d9822b" font-size="22" text-anchor="middle">A</text><circle cx="900" cy="300" r="7" fill="#b9c6bc"/>');
+ if(L===2)o+=Rc(210,335,230,14,K)+Rc(220,349,10,60,K)+Rc(420,349,10,60,K)+OB('freezer','Морозилка',105,100,Rc(40,110,130,300,'#b9c6bc',K)+Rc(40,236,130,6,K)+Rc(150,150,6,50,'#2b3a38')+Rc(150,270,6,60,'#2b3a38'))
+  +OB('kettle','Чайник',285,275,`<path d="M255 335q0-50 30-50t30 50z" fill="${f.kettle>=2?'#d9822b':'#8a97a0'}" stroke="#25342f" stroke-width="2"/><path d="M315 315l16-12" stroke="#8a97a0" stroke-width="5"/>`+(f.kettle>=2?'<path d="M290 280q-8-14 0-26M305 282q-8-14 0-26" stroke="#b9c6bc" stroke-opacity=".6" fill="none" stroke-width="3"/>':''))
+  +OB('cups','Кружки',385,300,Rc(365,315,24,20,'#b9c6bc')+Rc(395,315,24,20,'#b9c6bc'))
+  +OB('locker','Шкафчик',535,100,[0,1,2].map(i=>Rc(450+i*57,110,54,250,'#3a4a46',K)+`<circle cx="${450+i*57+44}" cy="240" r="4" fill="#b9c6bc"/>`).join(''))
+  +OB('tv','Телевизор',730,205,'<path d="M700 220l20-40M760 220l-10-45" stroke="#b9c6bc" stroke-width="3"/>'+Rc(660,220,140,100,'#25342f',K)+Rc(672,232,90,76,'#0a1210')+'<path d="M680 245h60M690 262h50M680 280h70" stroke="#b9c6bc" stroke-opacity=".25" stroke-width="3"/><circle cx="782" cy="250" r="6" fill="#4a5e55"/>')
+  +OB('desk','Стол управляющей',740,462,Rc(640,396,200,44,K)+Rc(650,440,10,60,K)+Rc(820,440,10,60,K)+Rc(700,346,60,50,'#25342f','#b9c6bc')+'<circle cx="730" cy="371" r="9" fill="none" stroke="#d9822b" stroke-width="3"/>')
+  +OB('win','Окно',305,86,Rc(230,100,150,150,'#0a1210',K)+[0,1,2,3].map(i=>Rc(240+i*34,125,28,34,'#e3d28c')+`<text transform="translate(${268+i*34} 150) scale(-1 1)" font-size="22" fill="#25342f">${'7351'[i]}</text>`).join('')+(f.mirrorSeen?'<text x="305" y="205" fill="#d9822b" font-size="24" text-anchor="middle">7351</text>':''))
+  +OB('photo','Фото',885,235,Rc(850,125,70,90,'#8a7a55','#25342f')+'<circle cx="868" cy="160" r="8" fill="#b9c6bc"/><circle cx="885" cy="165" r="8" fill="#b9c6bc"/><circle cx="902" cy="160" r="8" fill="#b9c6bc"/>');
+ return`<svg viewBox="0 0 960 520" role="group" aria-label="${LOCS[L]}">${o}</svg>`}
+function render(){const e=$('#m');top2();if(S.f.fin){if(!$('#fin')&&!$('#let'))finale();return}
+
+ if(!S.n){e.innerHTML='';return}
+ e.innerHTML=`<div class="nav"><b>${LOCS[S.loc]}</b><span class="tiny">стрелки по бокам: ${LOCS[(S.loc+3)%4]} / ${LOCS[(S.loc+1)%4]}</span></div><div id="say">${S.msg||'Выбери предмет внизу, потом объект. Или просто нажми на объект.'}</div><div class="sw"><button class="ar l" title="${LOCS[(S.loc+3)%4]}" onclick="go(-1)">◀</button><div class="scene${S.f.dark?(S.f.torchOk?' dark lit':' dark'):''}">${scene()}</div><button class="ar r" title="${LOCS[(S.loc+1)%4]}" onclick="go(1)">▶</button></div><div class="inv">${S.inv.map(i=>`<button class="${S.sel===i?'on':''}" onclick="sel('${i}')" title="${IT[i][1]}">${IT[i][0]} ${IT[i][1]}</button>`).join('')}</div><p class="tiny">${S.sel?'Выбрано: '+IT[S.sel][1]+'. Нажми на объект или на другой предмет.':''}</p>`}
+function go(d){S.loc=(S.loc+d+4)%4;S.sel=null;S.msg='';save();render()}
+function sel(i){if(S.sel&&S.sel!==i){comb(S.sel,i);return}S.sel=S.sel===i?null:i;if(S.sel)say(IT[i][1]+'.');render()}
+function comb(a,b){const p=[a,b].sort().join('+');const M={'k1+k2':['k12',['k1','k2']],'k3+k4':['k34',['k3','k4']],'k12+k34':['key',['k12','k34']],'bat+lamp':['lampok',['bat','lamp']]};S.sel=null;if(M[p]){M[p][1].forEach(take);give(M[p][0]);if(p==='bat+lamp')S.f.lampok=1;say('Получилось: '+IT[M[p][0]][1]+'.');if(M[p][0]==='key')S.f.assembled=1}else say('Это не сочетается.');save();render()}
+/* ---------- действия ---------- */
+function act(id){const f=S.f,n=S.n,s=S.sel;if(s){return use(s,id)}const H={
+ clock:()=>say('Настенные часы остановились на 03:17.'),
+ counter:()=>say(f.box?'Коробка вскрыта.':'Запечатанная скотчем коробка «Оператору смены». Нужен нож.'),
+ drawer:()=>{if(!S.inv.includes('knife')&&!f.knife){f.knife=1;give('knife');say('В ящике канцелярский нож.')}else if(n>=3&&!f.torch){f.torch=1;give('torch');say('Ещё в ящике фонарик с динамо. Он разряжен.')}else say('В ящике больше ничего.')},
+ term:()=>modal(`<h3>Терминал</h3><div class=row><button onclick="closeM();openP('m1')">Проверка штрихкодов (M1)</button>${n>=2&&f.lockerOpen?'<button onclick="closeM();openP(\'m2\')">Журнал оператора</button>':''}${n>=3?'<button onclick="closeM();openP(\'m3b\')">Сбой ротации (M3b)</button>':''}<button onclick="closeM()">Закрыть</button></div>${f.log?'<p class=tiny>Журнал: R4–R6. «Они блестят. Не спрашивай». Посылка Тарасика в ячейке Z.</p>':''}`),
+ phone:()=>{if(n===5&&!f.ph){f.ph=1;say('Сообщение: «Посылка №20 ждёт получателя. Получатель: вы». У тебя в журнале детали ключа.');fx('flick','гудение')}else say(['','Валентина П.: Смена началась. Проверяйте документы.','Вояж: Посылка прибыла. Отправитель: ****','Валентина П.: Вы там? У нас свет пропал. Мама: ты не спишь?','Вояж: срок хранения 5 суток. Прошло: 0 ч 00 мин.'][n]||'Батарея: 3%.')},
+ poster:()=>modal(`<h3>Плакат у выхода</h3><div class="eyebrow">1. Штрихкод (M1)</div><p>Возьми 12 цифр. Сложи цифры на 1-м, 3-м, 5-м... местах. Сложи цифры на 2-м, 4-м, 6-м... местах и умножь на 3. Сложи оба числа. Контрольная цифра показывает, сколько не хватает до круглых десятков (если уже круглое, то 0).</p><div class="eyebrow">2. Шифр Хилла</div><p>Ключ-матрица K:</p>${mat([[3,3],[2,5]])}<p>Буквы это числа: ${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((c,i)=>c+'='+i).join(' ')}.</p><p>Шифр идёт парами букв. Чтобы расшифровать пару, умножь её на обратную матрицу по модулю 26. Готовую обратную матрицу покажет «Справка Вояж» в задаче.</p><button onclick="closeM()">Закрыть</button>`),
+ cust:()=>{if(n>=5)return say('За стеклом очередь теней.');if(f.dark&&!f.torchOk)return say('Слишком темно.');if(!clientsLeft())return say('Очередь пуста.');if(S.ci>=1&&!tasksDone())return say('За окном никого. Следующий придёт, когда ты закончишь дела смены.');clientM()},
+ cams:()=>say(f.m4a?'Шторка камеры 2 закрыта.':'На камерах тень гуляет между K1, K2, K3.'),
+ cell0:()=>f.assembled?openP('f'):say('Ячейка №0. Нужен ключ из четырёх деталей и код.'),
+ sink:()=>say('Раковина. Можно набрать воду в кружку.'),
+ panel:()=>f.fuseIn&&!f.m3a?openP('m3a'):say(f.m3a?'Щиток починен.':'Щиток: предохранитель сгорел. Свет не включится.'),
+ lost:()=>{if(f.fuse)return say('Ящик пуст.');const st=f.mat||0;f.mat=st+1;say(['Коробка из ящика «Потерянные вещи»: внутри обувная коробка.','Обувная коробка: внутри жестяная банка из-под печенья.','Банка: внутри конверт с предохранителем. Забрала.'][st]);if(st===2){f.fuse=1;give('fuse');ach('mat')}},
+ shelf:()=>n>=2&&f.thermoOk!==undefined||S.inv.includes('thermo')?sortM():say('Стеллаж с посылками. Нужен термометр.'),
+ camcab:()=>f.camcab?openP('m4a'):say('Шкаф камер закрыт. Нужен ключ.'),
+ iron:()=>f.m4b?say('Склад пуст.'):n>=4?openP('m4b'):say('Железная дверь с матричным замком.'),
+ freezer:()=>{if(f.cubeTaken)return say('В морозилке только лёд.');f.cubeTaken=1;give('cube');say('Лоток льда. В одном кубике виден ключ. Взяла кубик.')},
+ kettle:()=>{if(!f.kettle)return say('Чайник пуст.');if(f.kettle===1){f.kettle=3;f.kt=Date.now();say('Чайник включён. Подожди 8 секунд.');return setTimeout(()=>{f.kettle=2;say('Чайник вскипел.');save()},8000)}say(f.kettle===3?'Кипит... ещё немного.':'Вода кипит.')},
+ cups:()=>{if(f.cup)return say('Остались пустые кружки.');f.cup=1;give('cup');say('Взяла кружку.')},
+ locker:()=>f.lockerOpen?say('Шкафчик пуст.'):say('Шкафчик сотрудника закрыт. Нужен ключ.'),
+ tv:()=>{if(f.bat)return say('Пульт без батареек.');f.bat=1;give('bat');say('Пульт от телевизора. Внутри батарейки.')},
+ desk:()=>f.safe?say('Сейф пуст.'):n>=4?openP('safe'):say('Сейф управляющей. Закрыт.'),
+ win:()=>say(f.mirrorSeen?'Стикеры в зеркале: 7351.':'На окне стикеры с зеркальным написанием.'),
+ photo:()=>f.photo?say('За фотографией пусто.'):openP('photo')};
+ (H[id]||(()=>0))();save();render()}
+function use(it,id){const f=S.f;S.sel=null;let m=null;
+ if(it==='knife'&&id==='counter'&&!f.box){m='Скотч разрезан. Внутри шкатулка с 4 барабанами.';openP('box')}
+ else if(it==='bat'&&id==='lamp')m='';
+ else if(it==='cup'&&id==='sink'){f.cupW=1;m='Кружка с водой.'}
+ else if(it==='cup'&&id==='kettle'){if(f.cupW){f.cupW=0;f.kettle=1;m='Вода в чайнике. Нажми на чайник.'}else if(f.cubeIn&&f.kettle===2){f.cubeIn=0;take('cup');take('cube');give('lkey');f.lk2=1;ach('ice');m='Кубик растаял. Ключ от шкафчика свободен!'}else m='Не получится.'}
+ else if(it==='cube'&&id==='cup'){m=''}
+ else if(it==='lkey'&&id==='locker'){take('lkey');f.lockerOpen=1;give('thermo');give('k2');m='В шкафчике термометр, деталь ключа II и стикер «ZYPJ — пароль журнала. Ключ на плакате у выхода».'}
+ else if(it==='mirror'&&id==='win'){f.mirrorSeen=1;m='В зеркале читается код 7351.'}
+ else if(it==='ckey'&&id==='camcab'){take('ckey');f.camcab=1;m='Шкаф камер открыт.';openP('m4a')}
+ else if(it==='fuse'&&id==='panel'){take('fuse');f.fuseIn=1;m='Предохранитель встал. Провода сорваны.';openP('m3a')}
+ else if(it==='torch'&&id==='camcab')m='';
+ else if(it==='lampok'&&id==='cust'){m='Нажми на окно клиента, УФ работает в окне клиента.';}
+ else if(it==='torch'&&id==='panel'){m='';}
+ else m='Ничего не происходит.';
+ if(m)say(m);save();render()}
+/* связки предмет+предмет на кружке */
+const _sel=sel;sel=function(i){if(S.sel==='cube'&&i==='cup'||S.sel==='cup'&&i==='cube'){S.sel=null;if(S.f.cupW||true){S.f.cubeIn=1;S.f.cupW=0;say('Кубик в кружке. Теперь залей кипятком (кружка на чайник).')}save();render();return}
+ if(i==='torch'&&!S.f.torchOk&&S.f.dark){chargeM();return}_sel(i)};
+function chargeM(){modal('<h3>Динамо</h3><p>Удерживай кнопку 3 секунды. Пока крутишь, экран тёмный.</p><button id="dyn" style="width:100%;padding:30px">Крутить</button><button onclick="closeM()">Закрыть</button>');const b=$('#dyn');let t;const st=()=>{t=setTimeout(()=>{S.f.torchOk=1;save();closeM();say('Фонарик заряжен.');render()},3000);b.textContent='Кручу...'},en=()=>{clearTimeout(t);b.textContent='Крутить'};b.onmousedown=b.ontouchstart=st;b.onmouseup=b.onmouseleave=b.ontouchend=en}
+function sortM(){if(S.f.sort)return say('Посылки уже разложены.');const items=[['Лёд пищевой, 10 кг',0,0],['Мороженое, 3 л',-5,0],['Грелка электрическая',45,1],['Обогреватель',40,1],['Книга по топологии',22,2],['Кружка керамическая',21,2]];modal(`<h3>Сортировка по температуре</h3><p class=tiny>Холодная / Тёплая / Комнатная. Температуры показывает термометр.</p>${items.map((x,i)=>`<p>${x[0]} (${x[1]} °C) <select id="s${i}"><option value=-1>?</option><option value=0>Холодная</option><option value=1>Тёплая</option><option value=2>Комнатная</option></select></p>`).join('')}<div class=row><button onclick="chkSort()">Проверить</button><button onclick="S.hu.sort=3;S.h++;closeM();say('Подсказка: ≤0 холодная, 40–45 тёплая, 21–22 комнатная.');save()">Справка «Вояж»</button><button onclick="closeM()">Закрыть</button></div><div id=pm></div>`)}
+function chkSort(){const a=[0,0,1,1,2,2];if(a.every((v,i)=>$('#s'+i).value==v)){S.f.sort=1;closeM();give('mirror');say('Открылась ячейка «Комнатная». Внутри зеркальце.');save();render()}else $('#pm').innerHTML='<p style="color:#d9822b">Не верно. Лёд и мороженое холодные, грелка и обогреватель тёплые, остальное комнатное.</p>'}
+/* ---------- клиенты ---------- */
+function clientM(){const c=CL[S.n][S.ci],f=S.f;f.seen=f.seen||{};const lampOK=f.lampok||S.n>1;const B=(k,l,show=1)=>show?`<button onclick="cl('${k}')">${l}</button>`:'';modal(`<h3>${c.n}</h3><div id=cm class=hint>Клиент ждёт у окна.</div><div class=row>${B('p','Попросить паспорт')}${B('s','Показать SMS')}${B('f','Найти посылку')}${B('b','Сканировать штрихкод')}${B('u','Светить УФ-лампой',S.n>=1&&f.lampok)}${B('sm','Попросить улыбнуться')}${B('ey','Посмотреть в глаза')}${B('t','Измерить температуру',S.n>=2&&S.inv.includes('thermo'))}</div><div class=row><button onclick="cl('g')">Выдать</button><button onclick="cl('d')">Отказать</button><button onclick="cl('sec')">Охрана</button><button onclick="closeM()">Отойти</button></div>`)}
+function cl(k){const c=CL[S.n][S.ci],f=S.f,o=t=>$('#cm').innerHTML=t;
+ if(k==='sm')o('<svg viewBox="15 10 70 85" style="width:200px;background:#0a1210">'+faceG(c,1)+'</svg><br>Клиент улыбается.');
+ if(k==='ey')o('<svg viewBox="22 34 56 24" style="width:280px;background:#0a1210">'+faceG(c,0)+'</svg><br>Ты смотришь ему в глаза.');
+ if(k==='p')o(c.p+(c.par?'<br>Посылка: '+c.par:'')+(c.note?'<br>'+c.note:''));
+ if(k==='s')o(c.s);
+ if(k==='b')o('Штрихкод: '+c.b+'. Контрольная цифра на наклейке: '+c.b.at(-1)+(c.bc!==+c.b.at(-1)?', по расчёту должна быть '+c.bc+'.':', по расчёту верная.')+' Срок хранения: '+c.st);
+ if(k==='u'){o(c.uv);if(c.gl)ach('glit')}
+ if(k==='t')o('Температура: '+c.t+' °C');
+ if(k==='f'){if(!c.fn)return o('Посылка найдена на стеллаже.');if(c.fn==='Z'){if(!f.log)return o('На стеллаже её нет. Где-то в служебных ячейках. Загляни в журнал на терминале.');f.found=1;return o('Служебная ячейка Z: посылка найдена.')}const need=c.fn==='m3a1'?'1':'6';if(!f.m3b)return o('Таблица ячеек сбита. Реши задачу ротации на терминале (M3b).');const v=prompt('Номер ячейки?');if(v===need){f.found=1;o('Посылка найдена.')}else o('Там пусто.')}
+ if(k==='sec'){if(S.f.sec)return o('Охрану уже вызывали этой ночью.');if(c.u){S.f.sec=1;o('Охрана приняла вызов. Клиент ушёл. (Один вызов за ночь.)');S.ci++;save();setTimeout(()=>{closeM();render()},900)}else{strike('Ложный вызов охраны.')}}
+ if(k==='g'){if(c.u){strike('Ты выдала посылку нечеловеку. '+c.r,1)}else if(c.fn&&!f.found)o('Посылки нет на стеллаже. Сначала «Найти посылку».');else{if(c.lev)ach('sheep');done(c.n+' ушёл с посылкой.')}}
+ if(k==='d'){if(c.u)done('Нечеловек ушёл ни с чем. '+c.r);else strike('Это был человек. Ему отказали зря.')}}
+function done(m){S.ci++;S.f.found=0;save();closeM();say(m);render();if(!clientsLeft()&&S.n<5)say(m+' Клиенты закончились.')}
+function strike(m,sc){S.st++;save();closeM();say(m+' Страйк '+S.st+'/3.');if(sc)setTimeout(()=>{scare()},120);if(S.st>=3){if(S.easy){say(m+' Три страйка. Лёгкий режим: ночь не сбрасывается.');S.st=2}else{S.lost=1;S.clock=0;S.ci=0;S.st=0;S.f.found=0;say('Три страйка. Ночь начинается заново.')}}save();render()}
+/* ---------- ночи ---------- */
+function endNight(){const n=S.n;if(n===1)fx('flick','тихий звук лампы');if(n===2){fx('flick','гудение');setTimeout(()=>fx('scare'),900)}if(n===4){fx('flick','сбой камер');setTimeout(()=>fx('scare'),1200)}
+ S.n++;S.f.fc=0;S.clock=0;S.st=0;S.ci=0;S.f.seen={};S.f.sec=0;S.loc=0;S.sel=null;T0=Date.now();S.f.darkDone=0;S.clock=0;if(S.n===4)S.f.dark=0;save();
+ const T=['','Ночь 2. «Лёд и жар».','Ночь 3. «Тёмная смена»: гаснет свет.','Ночь 4. «Камеры».','Ночь 5. «Рассвет»: свет гаснет в последний раз.'];say(T[n]||'');render();setTimeout(()=>nightIntro(S.n),1800)}
+/* ---------- финал ---------- */
+function finale(){closeM();S.f.fin=1;S.msg='';save();top2();let c=0;const html=()=>'<h3>Ячейка №0 открыта</h3><p>Свет включается плавно. Лампа становится янтарной. За стеклом рассвет. Каждый «Невостребованный» подходит к окну и кладёт карточку с одним пожеланием. Они искрятся на солнце. '+(S.inv.includes('wish')?' Твоя карточка тоже блестит.':'')+'</p><div class=cake>'+'🕯'.repeat(c)+'🕳'.repeat(20-c)+'</div><p class=tiny>Торт, 20 свечей.</p>';const m=$('#m');m.innerHTML='<div id=fin></div><div class=row><button id=bl>Задуть (держи 1 секунду)</button></div><div id=let></div>';$('#fin').innerHTML=html();const iv=setInterval(()=>{c++;$('#fin').innerHTML=html();if(c>=20){clearInterval(iv)}},300);const b=$('#bl');let t;const st=()=>{t=setTimeout(()=>{$('#fin').innerHTML='<h3>Свечи погасли</h3><p>Салют: огоньки, лепестки, искры. ✨🌸✨</p>';$('#let').innerHTML='<div class=row><button id=env>✉ Конверт «W. → П.»</button></div>';$('#env').onclick=()=>{$('#let').innerHTML='<div class=hint style="white-space:pre-wrap">'+decodeURIComponent(escape(atob(LET)))+'</div><div class=row><button onclick="finale()">Посмотреть финал ещё раз</button><button onclick="achList()">Ачивки</button><button onclick="if(confirm(\'Начать заново?\')){S=fresh();S.n=1;save();render()}">Начать заново</button></div>';ach('dawn');if(!S.h)ach('nohint');if(!S.lost)ach('nine')}},1000)};b.onmousedown=b.ontouchstart=st;b.onmouseup=b.onmouseleave=b.ontouchend=()=>clearTimeout(t)}
+if(matchMedia('(prefers-reduced-motion: reduce)').matches&&!localStorage.getItem(KEY))S.mode='soft';
+if(S.n)$('#cta').textContent='Продолжить смену';
+</script><script src="upgrade.js"></script><script src="finale.js"></script></body></html>
